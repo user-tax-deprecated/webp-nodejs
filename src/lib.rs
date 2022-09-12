@@ -4,6 +4,7 @@ use napi::{
   Env, Result, Task,
 };
 use napi_derive::napi;
+use tiny_skia::PremultipliedColorU8;
 use webp::Encoder;
 
 /*
@@ -44,9 +45,9 @@ impl Task for SvgWebp {
       let pixmap_size = rtree.svg_node().size.to_screen_size();
       let width = pixmap_size.width();
       let height = pixmap_size.height();
-      if let Ok(mut pixmap) = tiny_skia::Pixmap::new(width, height) {
+      if let Some(mut pixmap) = tiny_skia::Pixmap::new(width, height) {
         for px in pixmap.pixels_mut() {
-          px.alpha = 255;
+          *px = PremultipliedColorU8::from_rgba(px.red(), px.green(), px.blue(), 255).unwrap();
         }
         if resvg::render(
           &rtree,
