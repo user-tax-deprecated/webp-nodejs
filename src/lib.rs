@@ -40,22 +40,29 @@ impl Task for SvgWebp {
 
   fn compute(&mut self) -> Result<Self::Output> {
     let opt = usvg::Options::default();
-    let rtree = usvg::Tree::from_data(&self.svg, &opt.to_ref()).unwrap();
-    let pixmap_size = rtree.svg_node().size.to_screen_size();
-    let width = pixmap_size.width();
-    let height = pixmap_size.height();
-    let mut pixmap = tiny_skia::Pixmap::new(width, height).unwrap();
-    if resvg::render(
-      &rtree,
-      usvg::FitTo::Original,
-      tiny_skia::Transform::default(),
-      pixmap.as_mut(),
-    )
-    .is_some()
-    {
-      let encoder = Encoder::from_rgba(pixmap.data(), width, height);
-      let encoded_webp = encoder.encode(self.quality as f32);
-      return Ok(Some(encoded_webp.as_bytes().into()));
+    if let Ok(rtree) = usvg::Tree::from_data(&self.svg, &opt.to_ref()) {
+      let pixmap_size = rtree.svg_node().size.to_screen_size();
+      let width = pixmap_size.width();
+      let height = pixmap_size.height();
+      if let Ok(mut pixmap) = tiny_skia::Pixmap::new(width, height) {
+        for px in pixmap.pixels_mut() {
+          px.alpha = 255;
+        }
+        if resvg::render(
+          &rtree,
+          usvg::FitTo::Original,
+          tiny_skia::Transform::default(),
+          pixmap.as_mut(),
+        )
+        .is_some()
+        {
+          let img = pixmap.data();
+
+          let encoder = Encoder::from_rgba(img, width, height);
+          let encoded_webp = encoder.encode(self.quality as f32);
+          return Ok(Some(encoded_webp.as_bytes().into()));
+        }
+      }
     }
     Ok(None)
   }
