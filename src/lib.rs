@@ -47,7 +47,9 @@ impl Task for SvgWebp {
       let height = pixmap_size.height();
       if let Some(mut pixmap) = tiny_skia::Pixmap::new(width, height) {
         for px in pixmap.pixels_mut() {
-          *px = PremultipliedColorU8::from_rgba(px.red(), px.green(), px.blue(), 255).unwrap();
+          *px =
+            PremultipliedColorU8::from_rgba(255 - px.red(), 255 - px.green(), 255 - px.blue(), 255)
+              .unwrap();
         }
         if resvg::render(
           &rtree,
