@@ -5,5 +5,5 @@ import WEBP from ".";
 const { svgWebp } = WEBP;
 
 const img = readFileSync("demo.svg");
-writeFileSync("demo.webp", Buffer.from(svgWebp(img, 30)));
+writeFileSync("demo.webp", Buffer.from(await svgWebp(img, 30)));
 //console.log();
