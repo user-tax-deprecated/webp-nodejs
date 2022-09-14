@@ -14,7 +14,7 @@ struct SvgWebp {
 
 impl Task for SvgWebp {
   type Output = Option<Vec<u8>>;
-  type JsValue = Option<Vec<u8>>;
+  type JsValue = Option<Uint8Array>;
 
   fn compute(&mut self) -> Result<Self::Output> {
     let opt = usvg::Options::default();
@@ -49,7 +49,10 @@ impl Task for SvgWebp {
   }
 
   fn resolve(&mut self, env: Env, output: Self::Output) -> Result<Self::JsValue> {
-    Ok(output)
+    Ok(match output {
+      Some(o) => Some(Uint8Array::new(o)),
+      None => None,
+    })
   }
 }
 
