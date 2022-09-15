@@ -6,7 +6,11 @@
   "types": "index.d.ts",
   "napi": {
     "name": "webp",
-    "triples": {}
+    "triples": {
+      "additional": [
+        "x86_64-unknown-linux-musl"
+      ]
+    }
   },
   "license": "MIT",
   "devDependencies": {
