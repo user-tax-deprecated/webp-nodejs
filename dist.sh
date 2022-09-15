@@ -5,7 +5,7 @@ cd $DIR
 set -ex
 
 git add -A
-git commit -m.
+git commit -m. || true
 npm version patch
 git push --follow-tags
 
