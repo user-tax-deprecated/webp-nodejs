@@ -1,0 +1,33 @@
+{
+  "name": "@user.tax/webp",
+  "description": "convert png to webp",
+  "version": "0.0.14",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "napi": {
+    "name": "webp",
+    "triples": {
+      "additional": [
+        "aarch64-apple-darwin",
+        "x86_64-unknown-linux-musl"
+      ]
+    }
+  },
+  "license": "AGPL-3.0-or-later",
+  "devDependencies": {
+    "@napi-rs/cli": "^2.11.4",
+    "ava": "^4.3.3"
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "scripts": {
+    "artifacts": "napi artifacts",
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "prepublishOnly": "napi prepublish -t npm",
+    "test": "ava",
+    "version": "napi version"
+  },
+  "packageManager": "yarn@3.2.3"
+}
