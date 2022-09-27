@@ -8,7 +8,7 @@ use webp::Encoder;
 async fn svg_webp(svg: Buffer, quality: u8) -> napi::Result<Option<Buffer>> {
   let svg = svg.as_ref();
   Ok(
-    async move {
+    match async move {
       let opt = usvg::Options::default();
       let rtree = usvg::Tree::from_data(svg, &opt.to_ref())?;
       let pixmap_size = rtree.svg_node().size.to_screen_size();
@@ -33,11 +33,15 @@ async fn svg_webp(svg: Buffer, quality: u8) -> napi::Result<Option<Buffer>> {
 
           let encoder = Encoder::from_rgba(img, width, height);
           let encoded_webp = encoder.encode(quality as f32);
-          return Ok(Some(encoded_webp.as_bytes().into()));
+          return Ok(Some(encoded_webp.as_bytes().to_vec()));
         }
       }
       Ok::<_, anyhow::Error>(None)
     }
-    .await?,
+    .await?
+    {
+      Some(r) => Some(r.into()),
+      None => None,
+    },
   )
 }
