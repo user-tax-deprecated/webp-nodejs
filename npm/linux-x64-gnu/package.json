@@ -1,0 +1,21 @@
+{
+  "name": "@user.tax/webp-linux-x64-gnu",
+  "version": "0.0.19",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "webp.linux-x64-gnu.node",
+  "files": [
+    "webp.linux-x64-gnu.node"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">= 10"
+  },
+  "libc": [
+    "glibc"
+  ]
+}

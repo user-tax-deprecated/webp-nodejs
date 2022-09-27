@@ -1,0 +1,28 @@
+[package]
+edition = "2021"
+name = "webp-nodejs"
+version = "0.0.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+image = {version="0.24.4",default-features=false}
+# Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
+napi = { version = "2.9.1", default-features = false, features = ["napi8","async","error_anyhow","tokio_net","tokio_rt"] }
+napi-derive = "2.9.1"
+resvg = "0.23.0"
+webp = "0.2.2"
+tiny-skia = "0.6"
+usvg = { version = "0.23.0", default-features = false }
+tokio = "1.21.1"
+anyhow = "1.0.65"
+
+
+[build-dependencies]
+napi-build = "2.0.1"
+
+[profile.release]
+lto = true
+codegen-units = 1
+incremental = true
