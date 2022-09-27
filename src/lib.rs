@@ -1,6 +1,6 @@
 use image::EncodableLayout;
 use napi::{
-  bindgen_prelude::{AsyncTask, Uint8Array},
+  bindgen_prelude::{AsyncTask, Buffer},
   Env, Result, Task,
 };
 use napi_derive::napi;
@@ -9,12 +9,12 @@ use webp::Encoder;
 
 struct SvgWebp {
   quality: u8,
-  svg: Uint8Array,
+  svg: Buffer,
 }
 
 impl Task for SvgWebp {
   type Output = Option<Vec<u8>>;
-  type JsValue = Option<Uint8Array>;
+  type JsValue = Option<Buffer>;
 
   fn compute(&mut self) -> Result<Self::Output> {
     let opt = usvg::Options::default();
@@ -50,20 +50,20 @@ impl Task for SvgWebp {
 
   fn resolve(&mut self, env: Env, output: Self::Output) -> Result<Self::JsValue> {
     Ok(match output {
-      Some(o) => Some(Uint8Array::new(o)),
+      Some(o) => Some(Buffer::from(o)),
       None => None,
     })
   }
 }
 
 #[napi]
-fn svg_webp(svg: Uint8Array, quality: u8) -> AsyncTask<SvgWebp> {
+fn svg_webp(svg: Buffer, quality: u8) -> AsyncTask<SvgWebp> {
   AsyncTask::new(SvgWebp { svg, quality })
 }
 
 /*
 #[napi]
-pub fn svg_webp(svg: Uint8Array, quality: u8) -> Option<Vec<u8>> {
+pub fn svg_webp(svg: Buffer, quality: u8) -> Option<Vec<u8>> {
 let opt = usvg::Options::default();
 let rtree = usvg::Tree::from_data(&svg, &opt.to_ref()).unwrap();
 let pixmap_size = rtree.svg_node().size.to_screen_size();
