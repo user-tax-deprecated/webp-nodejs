@@ -6,10 +6,11 @@ use webp::Encoder;
 
 #[napi]
 async fn svg_webp(svg: Buffer, quality: u8) -> napi::Result<Option<Buffer>> {
+  let svg = svg.as_ref();
   Ok(
     async move {
       let opt = usvg::Options::default();
-      let rtree = usvg::Tree::from_data(&svg, &opt.to_ref())?;
+      let rtree = usvg::Tree::from_data(svg, &opt.to_ref())?;
       let pixmap_size = rtree.svg_node().size.to_screen_size();
       let width = pixmap_size.width();
       let height = pixmap_size.height();
